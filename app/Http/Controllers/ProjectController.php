@@ -19,9 +19,11 @@ class ProjectController extends Controller
         }
 
         $students = Student::all();
+        $unasignedStudents = Student::whereDoesntHave('groups')->get();
+
         $groups = Group::all();
 
-        return view('project.view', compact('project', 'students', 'groups'));
+        return view('project.view', compact('project', 'students', 'unasignedStudents', 'groups'));
     }
 
     public function create(CreateProjectRequest $request)

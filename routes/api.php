@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => 'project.created'], function() {
+    Route::post('student/store', [\App\Http\Controllers\StudentController::class, 'store'])->name('api.student.store');
+});

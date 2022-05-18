@@ -2,89 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use App\Models\Student;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('student.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreStudentRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreStudentRequest $request)
     {
         $student = new Student();
         $student->name = $request->post('student_name');
         $student->save();
 
-        return redirect()->route('home')->withSuccess('Student '. $student->name .' created');
+        return $student;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Student $student)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateStudentRequest  $request
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateStudentRequest $request, Student $student)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Student $student)
     {
-        //
+        $student->delete();
+
+        DB::table('group_student')->where('student_id', $student->id)->delete();
+
+        return redirect()->route('home')->withSuccess('Student deleted successfully');
+    }
+
+    public function assign(Student $student, Group $group)
+    {
+        if($group->empty_slots == 0)
+            return redirect()->route('home')->withError('Group #'. $group->id .' is full');
+
+        if($student->group)
+            return redirect()->route('home')->withError('Student '.$student->name.' has a group');
+
+        DB::table('group_student')->insert([
+            'group_id' => $group->id,
+            'student_id' => $student->id
+        ]);
+
+        return redirect()->route('home')->withSuccess('Student '.$student->name.' assigned to Group #'.$group->id);
     }
 }
