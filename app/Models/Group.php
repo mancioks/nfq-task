@@ -9,22 +9,17 @@ class Group extends Model
 {
     use HasFactory;
 
-//    public function students()
-//    {
-//        return $this->hasMany(Student::class, 'group_id', 'id');
-//    }
-
     public function students()
     {
         return $this->belongsToMany(Student::class);
     }
 
-    public function GetAssignedSlotsAttribute()
+    public function getAssignedSlotsAttribute()
     {
         return $this->students()->count();
     }
 
-    public function GetEmptySlotsAttribute()
+    public function getEmptySlotsAttribute()
     {
         $slots = Project::first()->per_group;
 

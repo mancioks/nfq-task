@@ -30,7 +30,7 @@ class StudentController extends Controller
 
     public function assign(Student $student, Group $group)
     {
-        if($group->empty_slots == 0)
+        if($group->empty_slots === 0)
             return redirect()->route('home')->withError('Group #'. $group->id .' is full');
 
         if($student->group)

@@ -27,4 +27,11 @@ class StoreStudentRequest extends FormRequest
             'student_name' => 'required|unique:students,name'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'student_name.unique' => 'Student exists',
+        ];
+    }
 }
