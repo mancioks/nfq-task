@@ -23,8 +23,6 @@ class StudentController extends Controller
     {
         $student->delete();
 
-        DB::table('group_student')->where('student_id', $student->id)->delete();
-
         return redirect()->route('home')->withSuccess('Student deleted successfully');
     }
 
