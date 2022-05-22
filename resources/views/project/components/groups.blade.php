@@ -14,7 +14,7 @@
                             <a class="btn btn-secondary dropdown-toggle w-100" href="#"
                                role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
                                aria-expanded="false">
-                                Assign student
+                                {{ __('Assign student') }}
                             </a>
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -23,7 +23,7 @@
                                            href="{{ route('student.assign', [$student->id, $group->id]) }}">{{ $student->name }}</a>
                                     </li>
                                 @empty
-                                    <li><a class="dropdown-item" href="#">No students</a>
+                                    <li><a class="dropdown-item" href="#">{{ __('No students') }}</a>
                                     </li>
                                 @endforelse
                             </ul>
@@ -34,7 +34,7 @@
         </div>
     @empty
         <div class="alert alert-light">
-            There are no groups in project
+            {{ __('There are no groups in project') }}
         </div>
     @endforelse
 </div>

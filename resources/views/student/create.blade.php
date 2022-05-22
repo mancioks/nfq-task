@@ -10,13 +10,13 @@
                         <form method="post" action="{{ route('student.store') }}">
                             @csrf
                             <div class="mb-3">
-                                <label for="student_name" class="form-label">Student name</label>
+                                <label for="student_name" class="form-label">{{ __('Student name') }}</label>
                                 <input type="text" class="form-control" id="student_name" name="student_name" value="{{old('student_name')}}">
                                 @error('student_name')
                                 <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
                         </form>
                     </div>
                 </div>

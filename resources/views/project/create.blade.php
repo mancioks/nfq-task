@@ -10,7 +10,7 @@
                         <form method="post" action="{{ route('project.store') }}">
                             @csrf
                             <div class="mb-3">
-                                <label for="project_title" class="form-label">Project title</label>
+                                <label for="project_title" class="form-label">{{ __('Project title') }}</label>
                                 <input type="text" class="form-control" id="project_title" name="project_title" value="{{old('project_title')}}" required>
                                 @error('project_title')
                                     <div class="form-text text-danger">{{ $message }}</div>
@@ -19,7 +19,7 @@
                             <div class="row">
                                 <div class="col-4">
                                     <div class="mb-3">
-                                        <label for="number_of_groups" class="form-label">Number of groups</label>
+                                        <label for="number_of_groups" class="form-label">{{ __('Number of groups') }}</label>
                                         <input type="number" class="form-control" id="number_of_groups" name="number_of_groups" value="{{old('number_of_groups')}}" required>
                                         @error('number_of_groups')
                                         <div class="form-text text-danger">{{ $message }}</div>
@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="col-4">
                                     <div class="mb-3">
-                                        <label for="students_per_group" class="form-label">Students per group</label>
+                                        <label for="students_per_group" class="form-label">{{ __('Students per group') }}</label>
                                         <input type="number" class="form-control" id="students_per_group" name="students_per_group" value="{{old('students_per_group')}}" required>
                                         @error('students_per_group')
                                         <div class="form-text text-danger">{{ $message }}</div>
@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
                         </form>
                     </div>
                 </div>
