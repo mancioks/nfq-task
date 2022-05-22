@@ -13,6 +13,7 @@ use Tests\TestCase;
 class StudentsTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      *
@@ -22,40 +23,43 @@ class StudentsTest extends TestCase
     public function test_delete_student()
     {
         // creating project and student
-        DB::table('projects')->insert(['name' => 'test', 'groups' => 1, 'per_group' => 1]);
-        DB::table('students')->insert(['name' => 'name lastname']);
-
-        $student = Student::first();
+        $project = Project::query()->create(['name' => 'test', 'per_group' => 1]);
+        $student = Student::query()->create(['name' => 'name lastname', 'project_id' => $project->id]);
 
         // db contains student
         $this->assertDatabaseHas('students', ['name' => $student->name]);
 
+        // delete student
         $this->delete(route('student.destroy', $student));
 
         // db does not contain student
         $this->assertDatabaseMissing('students', ['name' => $student->name]);
     }
 
-    public function test_delete_student_and_remove_from_group()
+    public function test_delete_student_and_remove_from_group_and_project()
     {
         // creating project, group, student and relationship
-        DB::table('projects')->insert(['name' => 'test', 'groups' => 1, 'per_group' => 1]);
-        DB::table('groups')->insert(['id' => 1]);
-        DB::table('students')->insert(['name' => 'name lastname']);
-        DB::table('group_student')->insert(['group_id' => 1, 'student_id' => 1]);
 
-        $student = Student::first();
-        $group = Group::first();
+        $project = Project::query()->create(['name' => 'test', 'per_group' => 1]);
+        $group = Group::query()->create(['name' => 'Group Test', 'project_id' => $project->id]);
+        $student = Student::query()->create(['name' => 'name lastname', 'project_id' => $project->id]);
+        $student->groups()->attach($group);
 
         // group contains student
         $this->assertTrue($group->students->contains($student));
+        // project contains student
+        $this->assertTrue($project->students->contains($student));
 
+        // delete student
         $this->delete(route('student.destroy', $student));
 
-        // load group after student delete
-        $group = Group::first();
+        // refresh group and project after student delete
+        $group->refresh();
+        $project->refresh();
 
         // group does not contain student
         $this->assertFalse($group->students->contains($student));
+        // project does not contain student
+        $this->assertFalse($project->students->contains($student));
     }
 }

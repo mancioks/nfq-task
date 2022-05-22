@@ -7,11 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-    use HasFactory;
+    protected $fillable = ['project_id', 'name'];
 
     public function students()
     {
         return $this->belongsToMany(Student::class);
+    }
+
+    public function project()
+    {
+        return $this->hasOne(Project::class, 'id', 'project_id');
     }
 
     public function getAssignedSlotsAttribute()
@@ -21,8 +26,6 @@ class Group extends Model
 
     public function getEmptySlotsAttribute()
     {
-        $slots = Project::first()->per_group;
-
-        return $slots - $this->assigned_slots;
+        return $this->project->per_group - $this->assigned_slots;
     }
 }

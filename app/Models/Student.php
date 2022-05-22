@@ -10,21 +10,20 @@ class Student extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'project_id'];
+
     public function groups()
     {
         return $this->belongsToMany(Group::class);
     }
 
+    public function project()
+    {
+        return $this->hasOne(Project::class, 'id', 'project_id');
+    }
+
     public function getGroupAttribute()
     {
         return $this->groups->first();
-    }
-
-    protected static function boot() {
-        parent::boot();
-
-        static::deleting(function($student) {
-            DB::table('group_student')->where('student_id', $student->id)->delete();
-        });
     }
 }

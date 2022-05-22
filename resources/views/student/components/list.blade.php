@@ -7,17 +7,15 @@
     </tr>
     </thead>
     <tbody>
-    @forelse($students as $student)
+    @forelse($project->students as $student)
         <tr>
             <td>{{ $student->name }}</td>
-            <td>{{ $student->group ? 'Group #'.$student->group->id : '-' }}</td>
+            <td>{{ $student->groups()->exists() ? $student->group->name : '-' }}</td>
             <td>
-                <a href="{{ route('student.destroy', $student->id) }}" onclick="event.preventDefault();document.getElementById('student-delete-{{ $student->id }}').submit();">
-                    {{ __('Delete') }}
-                </a>
-                <form id="student-delete-{{ $student->id }}" action="{{ route('student.destroy', $student->id) }}" method="POST">
+                <form method="post" action="{{ route('student.destroy', $student->id) }}" onsubmit="return confirm('{{ __('Are you sure?') }}');">
                     @csrf
                     @method('delete')
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
             </td>
         </tr>

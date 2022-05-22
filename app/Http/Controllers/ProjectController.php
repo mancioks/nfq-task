@@ -10,37 +10,49 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function show(Project $project)
     {
-        $project = Project::first();
-
-        if(!$project){
-            return view('project.create');
-        }
-
-        $students = Student::all();
-        $unasignedStudents = Student::whereDoesntHave('groups')->get();
-
-        $groups = Group::all();
-
-        return view('project.view', compact('project', 'students', 'unasignedStudents', 'groups'));
+        return view('project.view', compact('project'));
     }
 
-    public function create(CreateProjectRequest $request)
+    public function create()
     {
-        $numberOfGroups = $request->post('number_of_groups');
+        return view('project.create');
+    }
 
-        $project = new Project();
-        $project->name = $request->post('project_title');
-        $project->groups = $numberOfGroups;
-        $project->per_group = $request->post('students_per_group');
+    public function list()
+    {
+        if (Project::exists()) {
+            return view('project.list', ['projects' => Project::all()]);
+        } else {
+            return redirect()->route('project.create');
+        }
+    }
 
-        $project->save();
+    public function store(CreateProjectRequest $request)
+    {
+        $project = Project::query()->create([
+            'name' => $request->post('project_title'),
+            'per_group' => $request->post('students_per_group')
+        ]);
 
-        for($i = 0; $i < $numberOfGroups; $i++) {
-            Group::create();
+        for ($i = 1; $i <= $request->post('number_of_groups'); $i++) {
+            Group::query()->create([
+                'name' => sprintf('Group #%d', $i),
+                'project_id' => $project->id,
+            ]);
         }
 
-        return redirect()->route('home')->withSuccess('Project created');
+        return redirect()->route('project.show', $project)->withSuccess('Project created');
+    }
+
+    public function studentsListComponent(Project $project)
+    {
+        return view('student.components.list', compact('project'));
+    }
+
+    public function groupsListComponent(Project $project)
+    {
+        return view('project.components.groups', compact('project'));
     }
 }

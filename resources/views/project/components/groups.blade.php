@@ -1,8 +1,8 @@
 <div class="row col-8">
-    @forelse($groups as $group)
+    @forelse($project->groups as $group)
         <div class="col-6 mb-4">
             <div class="card text-center">
-                <div class="card-header">Group #{{ $group->id }}</div>
+                <div class="card-header">{{ $group->name }}</div>
                 <div class="card-body">
                     @foreach($group->students as $student)
                         <div class="btn btn-light w-100 mb-2 pe-none">
@@ -18,7 +18,7 @@
                             </a>
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                @forelse($unasignedStudents as $student)
+                                @forelse($project->unasigned_students as $student)
                                     <li><a class="dropdown-item"
                                            href="{{ route('student.assign', [$student->id, $group->id]) }}">{{ $student->name }}</a>
                                     </li>

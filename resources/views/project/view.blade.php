@@ -21,7 +21,7 @@
 
                         <div class="summary-wrapper lh-1">
                             <p>Project: <strong>{{ $project->name }}</strong></p>
-                            <p>Number of groups: <strong>{{ $project->groups }}</strong></p>
+                            <p>Number of groups: <strong>{{ $project->number_of_groups }}</strong></p>
                             <p>Students per group: <strong>{{ $project->per_group }}</strong></p>
                         </div>
 
@@ -33,6 +33,8 @@
                                 <label for="student_name" class="form-label">Student name:</label>
                                 <input type="text" class="form-control w-25 d-inline-block ms-2" id="student_name"
                                        name="student_name">
+                                <input type="text" class="d-none" id="project_id"
+                                       name="project_id" value="{{ $project->id }}">
                                 <button class="btn btn-primary" id="add_button">Add</button>
                                 <div id="student_form_response" class="col-6"></div>
                             </div>
@@ -59,9 +61,10 @@
         });
 
         add_button.addEventListener('click', function () {
-            var value = document.getElementById('student_name').value;
+            var student_name = document.getElementById('student_name').value;
+            var project_id = document.getElementById('project_id').value;
 
-            const data = {student_name: value};
+            const data = {student_name: student_name, project_id: project_id};
 
             fetch('{{ route('api.student.store') }}', {
                 method: 'POST',
@@ -90,8 +93,8 @@
         });
 
         function refreshComponents() {
-            loadcomponent('{{ route('student.component.list') }}', 'students_component_wrapper');
-            loadcomponent('{{ route('project.component.groups') }}', 'groups_component_wrapper');
+            loadcomponent('{{ route('project.component.studentslist', $project) }}', 'students_component_wrapper');
+            loadcomponent('{{ route('project.component.groupslist', $project) }}', 'groups_component_wrapper');
         }
 
         window.setInterval(refreshComponents, 10000);

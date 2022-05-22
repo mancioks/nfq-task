@@ -24,7 +24,7 @@ class CreateProjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'project_title' => 'required',
+            'project_title' => 'required|unique:projects,name',
             'number_of_groups' => 'required|numeric|min:1|max:100',
             'students_per_group' => 'required|numeric|min:1|max:100',
         ];

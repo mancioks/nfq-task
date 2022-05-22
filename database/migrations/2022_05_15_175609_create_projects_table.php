@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('groups');
-            $table->integer('per_group');
+            $table->string('name')->unique();
+            $table->unsignedBigInteger('per_group');
             $table->timestamps();
         });
     }
